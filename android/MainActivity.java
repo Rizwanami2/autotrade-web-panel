@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity {
     private WebView webView;
+    private static final String REMOTE_URL = "https://raw.githubusercontent.com/Rizwanami2/autotrade-web-panel/main/neurotrade_mobile.html";
+    private static final String LOCAL_URL = "file:///android_asset/neurotrade_mobile.html";
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
@@ -20,9 +22,15 @@ public class MainActivity extends AppCompatActivity {
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
-        settings.setAllowFileAccess(true);
+        settings.setCacheMode(WebSettings.LOAD_DEFAULT);
 
-        webView.setWebViewClient(new WebViewClient());
-        webView.loadUrl("file:///android_asset/neurotrade_mobile.html");
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+                view.loadUrl(LOCAL_URL);
+            }
+        });
+
+        webView.loadUrl(REMOTE_URL);
     }
 }
