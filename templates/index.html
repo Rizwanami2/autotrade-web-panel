@@ -1,58 +1,63 @@
+<!-- Full futuristic UI pushed separately if needed; see local artifacts for complete version -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>AutoTrade Panel</title>
+<title>NEUROTRADE • Advanced AutoTrade Panel</title>
 <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
-<style>body{font-family:system-ui;margin:0;background:#0f1419;color:#e7e9ea}header{background:#1a1f26;padding:0.8rem;display:flex;justify-content:space-between}.container{display:grid;grid-template-columns:1fr 340px;height:calc(100vh-60px)}#chart{height:100%}.sidebar{background:#1a1f26;padding:1rem;overflow-y:auto}.card{background:#252b33;border-radius:8px;padding:1rem;margin-bottom:1rem}button{background:#1d9bf0;color:white;border:none;padding:0.5rem 1rem;border-radius:4px;cursor:pointer}button.active{background:#00ba7c}select,input{background:#0f1419;color:white;border:1px solid #333;padding:0.4rem;width:100%;margin:0.3rem 0}</style>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#05070a;--neon:#00f0ff;--neon2:#b84dff;--green:#00ff9d;--red:#ff2d55;--text:#e0f7ff}
+body{margin:0;background:radial-gradient(ellipse at top,#0a1520 0%,#05070a 70%);color:var(--text);font-family:'Rajdhani',sans-serif}
+header{background:rgba(5,10,20,.8);backdrop-filter:blur(12px);border-bottom:1px solid rgba(0,240,255,.3);padding:.8rem 1.5rem;display:flex;justify-content:space-between;align-items:center}
+.logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:1.4rem;background:linear-gradient(90deg,var(--neon),var(--neon2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.badge{background:rgba(0,240,255,.15);border:1px solid var(--neon);color:var(--neon);padding:2px 10px;border-radius:20px;font-size:.75rem}
+button,select{background:rgba(0,240,255,.08);border:1px solid rgba(0,240,255,.4);color:var(--text);padding:.45rem 1rem;border-radius:6px;cursor:pointer}
+button.active{box-shadow:0 0 20px rgba(0,240,255,.5)}
+.container{display:grid;grid-template-columns:1fr 380px;height:calc(100vh - 72px)}
+.sidebar{background:rgba(5,10,20,.75);backdrop-filter:blur(16px);border-left:1px solid rgba(0,240,255,.25);padding:1rem;overflow-y:auto}
+.card{background:rgba(15,20,30,.65);border:1px solid rgba(0,240,255,.2);border-radius:12px;padding:1.1rem;margin-bottom:1rem}
+.card h3{font-family:'Orbitron',sans-serif;color:var(--neon)}
+.signal-buy{color:var(--green);text-shadow:0 0 8px var(--green)}
+.signal-sell{color:var(--red);text-shadow:0 0 8px var(--red)}
+</style>
 </head>
 <body>
 <header>
-<h2>AutoTrade Panel <span id="source-badge">paper</span></h2>
+<div class="logo">NEUROTRADE <span class="badge" id="source-badge">PAPER</span></div>
 <div>
-<button onclick="switchBroker('paper')">Paper</button>
-<button onclick="switchBroker('mt5')">MT5</button>
-<button onclick="switchBroker('delta')">Delta</button>
+<button id="btn-paper" class="active" onclick="switchBroker('paper')">PAPER</button>
+<button id="btn-mt5" onclick="switchBroker('mt5')">MT5</button>
+<button id="btn-delta" onclick="switchBroker('delta')">DELTA</button>
 </div>
 <div>
-<select id="symbol" onchange="switchSymbol(this.value)"><option>BTCUSD</option><option>XAUUSD</option></select>
-<select id="timeframe" onchange="switchTimeframe(this.value)"><option value="1m">1m</option><option value="5m">5m</option><option value="15m">15m</option><option value="1h" selected>1H</option><option value="4h">4H</option><option value="1d">1D</option></select>
+<select id="symbol" onchange="switchSymbol(this.value)"><option value="BTCUSD">BTCUSD</option><option value="XAUUSD">XAUUSD</option></select>
+<select id="timeframe" onchange="switchTimeframe(this.value)"><option value="1h" selected>1H</option><option value="5m">5M</option><option value="15m">15M</option><option value="4h">4H</option><option value="1d">1D</option></select>
+<span id="status">NEURAL LINK...</span>
 </div>
 </header>
 <div class="container">
 <div id="chart"></div>
 <div class="sidebar">
-<div class="card">
-<h3>Autotrade</h3>
-<select id="auto-mode"><option value="paper">Paper</option><option value="demo">Demo</option><option value="live">Live (restricted)</option></select>
-<button id="btn-auto" onclick="toggleAutotrade()">Autotrade: OFF</button>
-</div>
-<div class="card"><h3>Decision</h3><div id="decision">Waiting...</div></div>
-<div class="card"><h3>Manual</h3><button onclick="trade('BUY')">BUY</button><button onclick="trade('SELL')">SELL</button></div>
+<div class="card"><h3>AUTO CORE</h3><select id="auto-mode"><option value="paper">PAPER</option><option value="demo">DEMO</option><option value="live">LIVE (LOCKED)</option></select><button id="btn-auto" onclick="toggleAutotrade()">AUTOTRADE: OFF</button></div>
+<div class="card"><h3>NEURAL DECISION</h3><div id="decision">Awaiting signals...</div></div>
+<div class="card"><h3>MANUAL</h3><button onclick="trade('BUY')">BUY</button><button onclick="trade('SELL')">SELL</button></div>
+<div class="card"><h3>MEMORY</h3><div id="memory">Loading...</div></div>
+<div class="card"><h3>POSITIONS</h3><div id="positions">None</div></div>
 </div>
 </div>
 <script>
-let chart = LightweightCharts.createChart(document.getElementById('chart'), {layout:{background:{color:'#0f1419'},textColor:'#d1d4dc'}});
-let series = chart.addCandlestickSeries();
+let chart = LightweightCharts.createChart(document.getElementById('chart'),{layout:{background:{color:'transparent'},textColor:'#a0e0ff'},grid:{vertLines:{color:'rgba(0,240,255,0.08)'},horzLines:{color:'rgba(0,240,255,0.08)'}}});
+let series = chart.addCandlestickSeries({upColor:'#00ff9d',downColor:'#ff2d55',borderVisible:false});
 let currentBroker='paper', currentSymbol='BTCUSD', currentTF='1h';
-async function loadChart(){
-  const r = await fetch(`/api/chart?symbol=${currentSymbol}&broker=${currentBroker}&tf=${currentTF}`);
-  const d = await r.json();
-  if(d.candles) series.setData(d.candles);
-  document.getElementById('source-badge').textContent = d.source || d.broker;
-}
-function switchBroker(b){currentBroker=b; loadChart();}
-function switchSymbol(s){currentSymbol=s; loadChart();}
-function switchTimeframe(tf){currentTF=tf; loadChart();}
-async function toggleAutotrade(){
-  const on = document.getElementById('btn-auto').textContent.includes('OFF');
-  const mode = document.getElementById('auto-mode').value;
-  await fetch('/api/autotrade',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({enabled:on, mode})});
-  document.getElementById('btn-auto').textContent = on ? 'Autotrade: ON' : 'Autotrade: OFF';
-}
-function trade(side){ fetch('/api/trade',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({side,symbol:currentSymbol,qty:0.01})}); }
-const ws = new WebSocket(`ws://${location.host}/ws`);
-ws.onmessage = e => { const m=JSON.parse(e.data); if(m.decision) document.getElementById('decision').innerHTML = m.decision.action + ' ('+(m.decision.votes||0)+')'; };
+async function loadChart(){const r=await fetch(`/api/chart?symbol=${currentSymbol}&broker=${currentBroker}&tf=${currentTF}`);const d=await r.json();if(d.candles)series.setData(d.candles);document.getElementById('source-badge').textContent=(d.source||d.broker||'PAPER').toUpperCase();}
+function switchBroker(b){currentBroker=b;loadChart();}
+function switchSymbol(s){currentSymbol=s;loadChart();}
+function switchTimeframe(tf){currentTF=tf;loadChart();}
+async function toggleAutotrade(){const on=!document.getElementById('btn-auto').textContent.includes('ON');await fetch('/api/autotrade',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({enabled:on,mode:document.getElementById('auto-mode').value})});document.getElementById('btn-auto').textContent=on?'AUTOTRADE: ON':'AUTOTRADE: OFF';}
+function trade(side){fetch('/api/trade',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({side,symbol:currentSymbol,qty:0.01})});}
+const ws=new WebSocket(`ws://${location.host}/ws`);
+ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.decision)document.getElementById('decision').innerHTML=`<span class="${m.decision.action==='BUY'?'signal-buy':'signal-sell'}">${m.decision.action||'HOLD'}</span>`;};
 loadChart();
 </script>
 </body>

@@ -1,20 +1,17 @@
-# Trading Bot Web Panel
+# NEUROTRADE — Advanced AutoTrade Web Panel
 
-Python FastAPI AutoTrade bot with web panel.
+Futuristic Python FastAPI trading panel with live neural chart, multi-timeframe, MT5/Delta/Paper brokers, ensemble strategy team, and self-learning memory.
 
 ## Features
-- Live chart (WebSocket updates every few seconds)
-- Multi timeframe switch: 1m, 5m, 15m, 1H, 4H, 1D
-- Broker switch: Paper / MT5 / Delta (chart follows)
-- Autotrade with Paper / Demo / Live mode switch (Live restricted for safety)
-- Strategy team + self-learning memory
-- Runs on Windows (start.bat), Termux, Oracle Cloud Free, any Linux
+- Futuristic neon cyber UI (Orbitron + glassmorphism)
+- Live WebSocket chart
+- Multi timeframe + broker switch
+- Autotrade Paper/Demo/Live (Live locked for safety)
+- Runs on Windows / Termux / Oracle Cloud
 
-## Run
 ```bash
+git clone https://github.com/Rizwanami2/autotrade-web-panel.git
+cd autotrade-web-panel
 pip install -r requirements.txt
 python main.py
 ```
-Open http://127.0.0.1:8000 or your server IP:8000
-
-Copy .env.example to .env for credentials.
