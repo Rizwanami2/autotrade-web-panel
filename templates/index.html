@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AutoTrade Panel</title>
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+<style>body{font-family:system-ui;margin:0;background:#0f1419;color:#e7e9ea}header{background:#1a1f26;padding:0.8rem;display:flex;justify-content:space-between}.container{display:grid;grid-template-columns:1fr 340px;height:calc(100vh-60px)}#chart{height:100%}.sidebar{background:#1a1f26;padding:1rem;overflow-y:auto}.card{background:#252b33;border-radius:8px;padding:1rem;margin-bottom:1rem}button{background:#1d9bf0;color:white;border:none;padding:0.5rem 1rem;border-radius:4px;cursor:pointer}button.active{background:#00ba7c}select,input{background:#0f1419;color:white;border:1px solid #333;padding:0.4rem;width:100%;margin:0.3rem 0}</style>
+</head>
+<body>
+<header>
+<h2>AutoTrade Panel <span id="source-badge">paper</span></h2>
+<div>
+<button onclick="switchBroker('paper')">Paper</button>
+<button onclick="switchBroker('mt5')">MT5</button>
+<button onclick="switchBroker('delta')">Delta</button>
+</div>
+<div>
+<select id="symbol" onchange="switchSymbol(this.value)"><option>BTCUSD</option><option>XAUUSD</option></select>
+<select id="timeframe" onchange="switchTimeframe(this.value)"><option value="1m">1m</option><option value="5m">5m</option><option value="15m">15m</option><option value="1h" selected>1H</option><option value="4h">4H</option><option value="1d">1D</option></select>
+</div>
+</header>
+<div class="container">
+<div id="chart"></div>
+<div class="sidebar">
+<div class="card">
+<h3>Autotrade</h3>
+<select id="auto-mode"><option value="paper">Paper</option><option value="demo">Demo</option><option value="live">Live (restricted)</option></select>
+<button id="btn-auto" onclick="toggleAutotrade()">Autotrade: OFF</button>
+</div>
+<div class="card"><h3>Decision</h3><div id="decision">Waiting...</div></div>
+<div class="card"><h3>Manual</h3><button onclick="trade('BUY')">BUY</button><button onclick="trade('SELL')">SELL</button></div>
+</div>
+</div>
+<script>
+let chart = LightweightCharts.createChart(document.getElementById('chart'), {layout:{background:{color:'#0f1419'},textColor:'#d1d4dc'}});
+let series = chart.addCandlestickSeries();
+let currentBroker='paper', currentSymbol='BTCUSD', currentTF='1h';
+async function loadChart(){
+  const r = await fetch(`/api/chart?symbol=${currentSymbol}&broker=${currentBroker}&tf=${currentTF}`);
+  const d = await r.json();
+  if(d.candles) series.setData(d.candles);
+  document.getElementById('source-badge').textContent = d.source || d.broker;
+}
+function switchBroker(b){currentBroker=b; loadChart();}
+function switchSymbol(s){currentSymbol=s; loadChart();}
+function switchTimeframe(tf){currentTF=tf; loadChart();}
+async function toggleAutotrade(){
+  const on = document.getElementById('btn-auto').textContent.includes('OFF');
+  const mode = document.getElementById('auto-mode').value;
+  await fetch('/api/autotrade',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({enabled:on, mode})});
+  document.getElementById('btn-auto').textContent = on ? 'Autotrade: ON' : 'Autotrade: OFF';
+}
+function trade(side){ fetch('/api/trade',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({side,symbol:currentSymbol,qty:0.01})}); }
+const ws = new WebSocket(`ws://${location.host}/ws`);
+ws.onmessage = e => { const m=JSON.parse(e.data); if(m.decision) document.getElementById('decision').innerHTML = m.decision.action + ' ('+(m.decision.votes||0)+')'; };
+loadChart();
+</script>
+</body>
+</html>
