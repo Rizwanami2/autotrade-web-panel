@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEUROTRADE</title>
+<script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+<style>body{margin:0;background:#05070a;color:#e0f7ff;font-family:sans-serif}#chart{height:70vh} .card{background:#111;padding:10px;margin:8px;border-radius:8px}</style>
+</head><body>
+<h2>NEUROTRADE Mobile</h2>
+<div id="chart"></div>
+<div class="card" id="decision">Loading...</div>
+<script>
+const chart = LightweightCharts.createChart(document.getElementById('chart'),{layout:{background:{color:'#05070a'},textColor:'#aaa'}});
+const series = chart.addCandlestickSeries({upColor:'#00ff9d',downColor:'#ff2d55'});
+function demo(){const d=[];let p=96000;const n=Date.now()/1000;for(let i=80;i>=0;i--){p+=(Math.random()-.5)*60;d.push({time:n-i*300,open:p,high:p+10,low:p-10,close:p});}return d;}
+series.setData(demo());
+document.getElementById('decision').innerText='Paper mode active - Open app when needed';
+</script>
+</body></html>
