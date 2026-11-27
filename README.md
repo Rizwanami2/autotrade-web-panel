@@ -1,20 +1,11 @@
-# NEUROTRADE — Advanced AutoTrade Web Panel
+# NEUROTRADE
 
-## Latest Features
-- Real-time neural decision indicators (BUY/SELL vote bars + confidence)
-- Trade levels display: Entry, SL, TP when signal is active
-- Futuristic neon cyber UI
-- Live WebSocket chart updates
-- Multi timeframe + Broker switch (Paper/MT5/Delta)
-- Autotrade with Paper/Demo/Live mode
+## Platforms
+- Windows: start.bat
+- Termux: pip install -r requirements.txt && python main.py
+- Oracle Free / Linux: chmod +x start.sh && ./start.sh
 
-## Run
-```bash
-git clone https://github.com/Rizwanami2/autotrade-web-panel.git
-cd autotrade-web-panel
-pip install -r requirements.txt
-python main.py
-```
-Open http://127.0.0.1:8000
+Paper + Delta public charts work everywhere.
+MT5 is Windows-only.
 
-All current local updates are reflected.
+Fixed: index route, MT5 import safe on non-Windows.
