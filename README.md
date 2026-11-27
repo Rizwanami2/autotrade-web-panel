@@ -1,11 +1,11 @@
 # NEUROTRADE
 
-## Platforms
-- Windows: start.bat
-- Termux: pip install -r requirements.txt && python main.py
-- Oracle Free / Linux: chmod +x start.sh && ./start.sh
+## Oracle Free Tier
+Add to .env:
+LOW_RESOURCE=true
 
-Paper + Delta public charts work everywhere.
-MT5 is Windows-only.
+Reduces memory and CPU:
+- Fewer chart bars
+- Slower WebSocket & autotrade loops
 
-Fixed: index route, MT5 import safe on non-Windows.
+1-2 GB RAM is sufficient.
