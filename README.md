@@ -1,11 +1,6 @@
 # NEUROTRADE
 
-## Oracle Free Tier
-Add to .env:
-LOW_RESOURCE=true
+Default is fast mode.
+WebSocket ~3s, Autotrade ~6s.
 
-Reduces memory and CPU:
-- Fewer chart bars
-- Slower WebSocket & autotrade loops
-
-1-2 GB RAM is sufficient.
+Set LOW_RESOURCE=true only if your Oracle instance is very low on RAM.
