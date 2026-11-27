@@ -1,3 +1,3 @@
 # NEUROTRADE
 
-WebSocket latency optimized: updates every 1.5 seconds by default.
+Ultra low latency mode: WebSocket updates every 0.5 seconds.
