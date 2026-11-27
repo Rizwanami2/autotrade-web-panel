@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+websockets
+python-dotenv
+pandas
+numpy
+requests
+MetaTrader5
+delta-rest-client
