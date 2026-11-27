@@ -1,12 +1,3 @@
-# NEUROTRADE — Advanced AutoTrade Web Panel
+# NEUROTRADE
 
-Futuristic panel with real-time neural indicators.
-
-## New
-- Real-time neural decision indicators
-- BUY/SELL vote percentage bars
-- Average confidence meter
-- Per-strategy action + confidence list
-- Live updating via WebSocket
-
-Clone and run as before.
+Now shows trade levels (Entry / SL / TP) in real-time when a BUY or SELL signal appears.
